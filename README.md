@@ -154,15 +154,6 @@ Format as bullet points for email readability.
 - **Audit Logging**: Comprehensive activity logging
 - **Least Privilege**: Minimal required permissions
 
-## 📚 Repository Contents
-
-| Directory | Description |
-|-----------|-------------|
-| `/docs` | Detailed setup guides and architecture documentation |
-| `/configs` | JSON configuration files for all tools |
-| `/scripts` | PowerShell automation scripts |
-| `/screenshots` | Visual documentation of the setup |
-| `/examples` | Sample payloads and test data |
 
 ## 🚀 Future Enhancements
 

@@ -13,6 +13,9 @@ This guide provides step-by-step instructions for setting up the complete SIEM A
 - **Tines Configuration**: 20-30 minutes
 - **Testing & Validation**: 30 minutes
 
+  ## 🔧 WorkFlow
+   - ![wrkflw](images/wrkflw.png)
+
 ## 🔧 Phase 1: AWS EC2 Windows Endpoint
 
 ### Step 1: Create AWS Account
@@ -30,6 +33,9 @@ This guide provides step-by-step instructions for setting up the complete SIEM A
    - **Instance Type**: `t3.medium` (4GB RAM recommended)
    - **Key Pair**: Create new key pair named `siem-project-key`
    - **Download** the `.pem` file and keep it secure
+   - ![EC2](images/ec2_1.png)
+   - ![EC2_1](images/ec2_2.png)
+
 
 ### Step 3: Configure Security Group
 1. Create new security group: `SIEM-Security-Group`
@@ -39,6 +45,9 @@ This guide provides step-by-step instructions for setting up the complete SIEM A
    Source: My IP (automatically detects your IP)
    Description: RDP access for SIEM project
    ```
+   - ![rdp](images/rdp_2.png)
+   
+   
 3. **Launch Instance**
 
 ### Step 4: Connect to Windows Instance
@@ -52,6 +61,7 @@ This guide provides step-by-step instructions for setting up the complete SIEM A
    - **Computer**: [Public IPv4 address]
    - **Username**: Administrator
    - **Password**: [Decrypted password]
+   - - ![rdp_1](images/rdp.png)
 
 ### Step 5: Initial Windows Configuration
 Once connected via RDP:
@@ -80,6 +90,8 @@ Once connected via RDP:
    - **Template**: Security
 3. **Note down** the elastic username and password (save securely!)
 4. Click **"Create deployment"** (takes 5-10 minutes)
+5. - ![endpointss](images/endpoints.png)
+
 
 ### Step 3: Access Elastic Security
 1. Once deployment is ready, click **"Open"**
@@ -114,16 +126,19 @@ Once connected via RDP:
    - Name: `Alert Receiver`
    - Keep default settings
    - **Copy the webhook URL** (you'll need this later)
+   
 
 2. **Add AI Summarize Action**:
    - Drag **AI Summarize** to canvas  
    - Name: `AI Alert Analysis`
    - Connect it to the webhook (drag line between them)
+   - - ![AI](images/AI_events.png)
 
 3. **Add Email Action**:
    - Drag **Email** to canvas
    - Name: `Send Alert Summary`  
    - Connect it to AI Summarize action
+   - - ![email](images/mail_events.png)
 
 ### Step 4: Configure AI Prompt
 In the AI Summarize action, set this prompt:
@@ -152,6 +167,7 @@ Analysis Format:
 6. Paste and run the command
 7. Wait for "Elastic Agent installed successfully" message
 8. Verify in Elastic Fleet that agent shows as "Healthy"
+9. - ![endpoint_1](images/endpoints.png)
 
 ### Step 2: Add Elastic Defend Integration
 1. In Fleet, click on your policy: `Windows-Endpoints-Policy`
@@ -171,6 +187,7 @@ Analysis Format:
    Index patterns: logs-*
    Custom query: event.code: 4672 and winlog.event_data.PrivilegeList: *SeDebugPrivilege*
    ```
+   - ![rules](images/rules.png)
 5. **Continue Setup**:
    - **Name**: `Administrative Privilege Usage Detection`
    - **Description**: `Detects when administrative privileges are assigned to accounts`
@@ -191,8 +208,10 @@ Analysis Format:
        "Content-Type": "application/json"
      }
      ```
+     - ![connectrs](images/connectors.png)
+     - - ![connectors](images/connectors_url.png)
 
-### Step 5: Configure Rule Actions
+### Step 5: Configure Ru+le Actions
 1. Edit your detection rule (Administrative Privilege Usage Detection)
 2. Go to **Actions** tab
 3. Add action: Select your `Tines-Alert-Webhook`
@@ -218,6 +237,7 @@ Analysis Format:
    whoami /priv
    ```
 3. The command will display current privileges, triggering Event ID 4672
+4. - ![alert](images/alert.png)
 
 ### Step 2: Verify Alert Flow
 1. **Check Elastic SIEM**:
@@ -232,6 +252,7 @@ Analysis Format:
 3. **Check Email**:
    - Configure email settings in Tines Email action
    - Verify AI summary email was sent
+   - - ![email_event_1](images/mail_events.png)
 
 ### Step 3: Validate AI Analysis
 The AI should provide analysis like:
@@ -259,6 +280,7 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Force
 2. Elastic connector configured with correct URL
 3. Detection rule has actions enabled
 4. Rule query is triggering alerts
+   - ![connectors_url](images/connectors_url.png)
 
 ### No Alerts Generated
 **Solution**: 
